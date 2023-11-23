@@ -28,6 +28,7 @@ public class Chat extends JFrame{
     private static final int WINDOW_WIDTH = 700;
     private static final int WINDOW_POSX = 800;
     private static final int WINDOW_POSY = 300;
+    private boolean isConnected = false;
     JButton btnSend = new JButton("Отправить.");
     JLabel lblLogin = new JLabel("Login:");
     JLabel lblPassword = new JLabel("Password:");
@@ -38,7 +39,7 @@ public class Chat extends JFrame{
     JTextField txtFieldIP = new JTextField();
     JTextField txtFieldMessage = new JTextField();
     JTextArea areaMessage = new JTextArea();
-    JScrollPane scrollPane = new JScrollPane(areaMessage);
+    //JScrollPane scrollPane = new JScrollPane(areaMessage);
     JPanel panServer = new JPanel(new GridLayout(6, 2));
     JPanel panClient = new JPanel(new GridLayout(4, 1));
     String login;
@@ -60,7 +61,7 @@ public class Chat extends JFrame{
         panServer.add(lblIP);
         panServer.add(txtFieldIP);
         panClient.add(lblMessage);
-        panClient.add(scrollPane);
+        //panClient.add(scrollPane);
         panClient.add(areaMessage);
         panClient.add(txtFieldMessage);
         panClient.add(btnSend);
@@ -100,11 +101,14 @@ public class Chat extends JFrame{
         System.out.println("Отправлено сообщение: " + message);
         txtFieldMessage.setText("");
 
-        try (FileWriter fileWriter = new FileWriter("chat_history.txt", true)) {
-            fileWriter.write(message);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(isConnected) {
+            try (FileWriter fileWriter = new FileWriter("chat_history.txt", true)) {
+                fileWriter.write(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     private void loadChatHistory() {
@@ -127,6 +131,11 @@ public class Chat extends JFrame{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // метод для установки значения isConnected
+    public void setConnected(boolean connected) {
+        isConnected = connected;
     }
 
     public static void main(String[] args) {

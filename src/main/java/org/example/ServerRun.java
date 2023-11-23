@@ -28,6 +28,7 @@ public class ServerRun extends JFrame{
     JButton btnStart = new JButton("Start Server");
     JButton btnStop = new JButton("Stop Server");
     boolean isServerWorking;
+    Chat chat;
     ServerRun(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(WINDOW_POSX, WINDOW_POSY);
@@ -38,12 +39,17 @@ public class ServerRun extends JFrame{
         btnStart.addActionListener(e -> {
             if (!isServerWorking) {
                 isServerWorking = true;
+                if (chat == null) {
+                    chat = new Chat();
+                }
+                chat.setConnected(true);
             }
             System.out.println("Статус сервера: " + isServerWorking);
         });
         btnStop.addActionListener(e -> {
             if (isServerWorking) {
                 isServerWorking = false;
+                chat.setConnected(false);
             }
             System.out.println("Статус сервера: " + isServerWorking);
         });
