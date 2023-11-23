@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.*;
 
 /*
 Создать окно клиента чата. Окно должно содержать JtextField для ввода логина, пароля,
@@ -27,18 +30,21 @@ public class Chat extends JFrame{
     JTextField txtFieldIP = new JTextField();
     JTextField txtFieldMessage = new JTextField();
     JTextArea areaMessage = new JTextArea();
+    JScrollPane scrollPane = new JScrollPane(areaMessage);
     JPanel panServer = new JPanel(new GridLayout(6, 2));
     JPanel panClient = new JPanel(new GridLayout(4, 1));
     String login;
     String password;
     String IP;
     String message;
+
     Chat(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocation(WINDOW_POSX, WINDOW_POSY);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setTitle("ChatWindow");
         setResizable(false);
+
         panServer.add(lblLogin);
         panServer.add(txtFieldLogin);
         panServer.add(lblPassword);
@@ -46,22 +52,73 @@ public class Chat extends JFrame{
         panServer.add(lblIP);
         panServer.add(txtFieldIP);
         panClient.add(lblMessage);
+        panClient.add(scrollPane);
         panClient.add(areaMessage);
         panClient.add(txtFieldMessage);
         panClient.add(btnSend);
 
+        txtFieldMessage.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    sendMessage();
+                }
+            }
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+
         btnSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                message = txtFieldLogin.getText() + ": " + txtFieldMessage.getText() + "\n";
-                areaMessage.append(message);
-                System.out.println("Отправлено сообщение: " + message);
+                sendMessage();
             }
         });
+
         setLayout(new GridLayout(2,1));
         add(panServer);
         add(panClient);
+
+        loadChatHistory(); // Загрузка истории чата
+
         setVisible(true);
+    }
+
+    private void sendMessage() {
+        message = txtFieldLogin.getText() + ": " + txtFieldMessage.getText() + "\n";
+        areaMessage.append(message);
+        System.out.println("Отправлено сообщение: " + message);
+        txtFieldMessage.setText("");
+
+        try (FileWriter fileWriter = new FileWriter("chat_history.txt", true)) {
+            fileWriter.write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadChatHistory() {
+        File file = new File("chat_history.txt");
+        if (!file.exists()) { // Проверяем, существует ли файл
+            try {
+                file.createNewFile(); // Создаем новый файл, если он не существует
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try (FileReader fileReader = new FileReader(file)) {
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                areaMessage.append(line + "\n");
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
