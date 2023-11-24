@@ -1,11 +1,10 @@
 package org.example;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 /*
 Первое задание – добавить на экран компоновщик-сетку с одним столбцом и добавить над существующей
  кнопкой следующие компоненты в заданном порядке: JLabel с заголовком «Выберите режим игры»,
@@ -37,13 +36,13 @@ public class SettingsWindow extends JFrame {
     private static final int WINDOW_HEIGHT = 230;
     private static final int WINDOW_WIDTH = 350;
     JButton btnStart = new JButton("Start new game");
-    JLabel gameMode = new JLabel("Выберите режим игры");
-    JLabel gameField = new JLabel("Установленный размер поля:");
-    JLabel winCount = new JLabel("Установленная длина:");
+    JLabel gameMode = new JLabel("Game mode:");
+    JLabel gameField = new JLabel("Map size:");
+    JLabel winCount = new JLabel("Length win line:");
     JSlider fieldSlider = new JSlider(3,10);
     JSlider winLengthSlider = new JSlider(3,10);
-    JRadioButton humanVsAi = new JRadioButton("Человек против компьютера");
-    JRadioButton humanVsHuman = new JRadioButton("Человек против человека");
+    JRadioButton humanVsAi = new JRadioButton("Human vs AI");
+    JRadioButton humanVsHuman = new JRadioButton("Human vs Human");
     ButtonGroup gameModeButtonsGroup = new ButtonGroup();
     JPanel panBottom;
 
@@ -62,15 +61,22 @@ public class SettingsWindow extends JFrame {
         panBottom.add(winLengthSlider);
         panBottom.add(btnStart);
         humanVsAi.setSelected(true);
-        fieldSlider.addChangeListener(e -> gameField.setText("Установленный размер поля: " + fieldSlider.getValue()));
-        winLengthSlider.addChangeListener(e -> winCount.setText("Установленная длина: " + winLengthSlider.getValue()));
+        fieldSlider.addChangeListener(e -> gameField.setText("Set field size: " + fieldSlider.getValue()));
+        winLengthSlider.addChangeListener(e -> winCount.setText("Installed length: " + winLengthSlider.getValue()));
 
-        btnStart.addActionListener(e -> {
-            gameWindow.startNewGame(humanVsAi.isSelected()?0:1,
-                    fieldSlider.getValue(),
-                    fieldSlider.getValue(),
-                    winLengthSlider.getValue());
-            setVisible(false);
+        btnStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (humanVsAi.isSelected()) gameWindow.startNewGame(0,
+                        fieldSlider.getValue(),
+                        fieldSlider.getValue(),
+                        winLengthSlider.getValue());
+                else gameWindow.startNewGame(1,
+                        fieldSlider.getValue(),
+                        fieldSlider.getValue(),
+                        winLengthSlider.getValue());
+                SettingsWindow.this.setVisible(false);
+            }
         });
         add(panBottom);
 //        add(btnStart);
