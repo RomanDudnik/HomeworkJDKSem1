@@ -44,14 +44,14 @@ public class ServerRun extends JFrame{
                 }
                 chat.setConnected(true);
             }
-            System.out.println("Статус сервера: " + isServerWorking);
+            System.out.println("Status server: " + isServerWorking);
         });
         btnStop.addActionListener(e -> {
             if (isServerWorking) {
                 isServerWorking = false;
                 chat.setConnected(false);
             }
-            System.out.println("Статус сервера: " + isServerWorking);
+            System.out.println("Status server: " + isServerWorking);
         });
         setLayout(new GridLayout(1,2));
         add(btnStart);

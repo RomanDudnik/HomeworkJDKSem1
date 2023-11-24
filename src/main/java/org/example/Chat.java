@@ -29,11 +29,11 @@ public class Chat extends JFrame{
     private static final int WINDOW_POSX = 800;
     private static final int WINDOW_POSY = 300;
     private boolean isConnected = false;
-    JButton btnSend = new JButton("Отправить.");
+    JButton btnSend = new JButton("Send Message");
     JLabel lblLogin = new JLabel("Login:");
     JLabel lblPassword = new JLabel("Password:");
     JLabel lblIP = new JLabel("IP:");
-    JLabel lblMessage = new JLabel("Сообщение:");
+    JLabel lblMessage = new JLabel("Message:");
     JTextField txtFieldLogin = new JTextField();
     JTextField txtFieldPassword = new JTextField();
     JTextField txtFieldIP = new JTextField();
@@ -98,7 +98,7 @@ public class Chat extends JFrame{
     private void sendMessage() {
         message = txtFieldLogin.getText() + ": " + txtFieldMessage.getText() + "\n";
         areaMessage.append(message);
-        System.out.println("Отправлено сообщение: " + message);
+        System.out.println("Message sent: " + message);
         txtFieldMessage.setText("");
 
         if(isConnected) {
